@@ -39,6 +39,11 @@ public class PersonController {
         personService.deletePerson(id);
         return ResponseEntity.ok("Пользователь с ID " + id + " удален");
     }
+    @DeleteMapping("/person/all")
+    public ResponseEntity<String> deleteAllPersons() {
+        personService.deleteAllPersons();
+        return ResponseEntity.ok("Все пользователи удалены");
+    }
 
     @PutMapping("/person/{id}")
     public Person updatePerson(@PathVariable Long id, @RequestBody Person updatedPerson) {

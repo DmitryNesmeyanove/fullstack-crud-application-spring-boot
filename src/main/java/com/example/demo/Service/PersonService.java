@@ -3,8 +3,11 @@ package com.example.demo.Service;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -20,16 +23,31 @@ public class PersonService {
     public Person saveUser(Person person){
         return personRepository.save(person);
     }
-    public Person findPersonByUsername(String username){
-        return personRepository.findPersonByUsername(username);
+
+    public Person findPersonByUsername(String username) {
+        return personRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Пользователь с username '" + username + "' не найден"
+                ));
     }
-    public Person findByEmail(String email){
-        return personRepository.findByEmail(email);
+    public Person findByEmail(String email) {
+        return personRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Пользователь с email '" + email + "' не найден"
+                ));
+    }
+    public void deleteAllPersons() {
+        personRepository.deleteAll();
     }
     public List<Person> getAllPersons() {
         return personRepository.findAll();
     }
     public void deletePerson(Long id) {
+        if (!personRepository.existsById(id)) {
+            throw new EntityNotFoundException("Пользователь с ID " + id + " не найден");
+        }
         personRepository.deleteById(id);
     }
     public Person updatePerson(Long id, Person updatedPerson) {
