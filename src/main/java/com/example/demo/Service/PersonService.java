@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.dto.PersonDTO;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,25 +26,45 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    public Person findPersonByUsername(String username) {
-        return personRepository.findByUsername(username)
+    public PersonDTO findPersonByUsername(String username) {
+        Person person = personRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Пользователь с username '" + username + "' не найден"
                 ));
+        PersonDTO personDTO = new PersonDTO();
+        personDTO.setUsername(person.getUsername());
+        personDTO.setAge(person.getAge());
+        personDTO.setEmail(person.getEmail());
+        return personDTO;
     }
-    public Person findByEmail(String email) {
-        return personRepository.findByEmail(email)
+    public PersonDTO findByEmail(String email) {
+        Person person = personRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Пользователь с email '" + email + "' не найден"
                 ));
+        PersonDTO personDTO = new PersonDTO();
+        personDTO.setUsername(person.getUsername());
+        personDTO.setAge(person.getAge());
+        personDTO.setEmail(person.getEmail());
+        return personDTO;
     }
     public void deleteAllPersons() {
         personRepository.deleteAll();
     }
-    public List<Person> getAllPersons() {
-        return personRepository.findAll();
+    public List<PersonDTO> getAllPersons() {
+        List<Person> persons = personRepository.findAll();
+        List<PersonDTO> personDTOs = new ArrayList<>();
+
+        for (int i = 0; i < persons.size(); i++) {
+            PersonDTO dto = new PersonDTO();
+            dto.setUsername(persons.get(i).getUsername());
+            dto.setEmail(persons.get(i).getEmail());
+            dto.setAge(persons.get(i).getAge());
+            personDTOs.add(dto);
+        }
+        return personDTOs;
     }
     public void deletePerson(Long id) {
         if (!personRepository.existsById(id)) {
