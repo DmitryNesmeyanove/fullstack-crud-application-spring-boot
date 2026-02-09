@@ -1,7 +1,5 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Person;
-
 public class PersonDTO{
     String username;
     int age;
