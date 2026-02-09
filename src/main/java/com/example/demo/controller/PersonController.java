@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 import com.example.demo.Service.PersonService;
+import com.example.demo.dto.PersonDTO;
 import com.example.demo.model.Person;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,17 +21,17 @@ public class PersonController {
         return personService.saveUser(person);
     }
     @GetMapping("/person/all")
-    public List<Person> getAllPersons() {
+    public List<PersonDTO> getAllPersons() {
         return personService.getAllPersons();
     }
 
     @GetMapping("/person/search/username")
-    public Person findPersonByUsername(@RequestParam String username) {
+    public PersonDTO findPersonByUsername(@RequestParam String username) {
         return personService.findPersonByUsername(username);
     }
 
     @GetMapping("/person/search/email")
-    public Person findByEmail(@RequestParam String email) {
+    public PersonDTO findByEmail(@RequestParam String email) {
         return personService.findByEmail(email);
     }
 
