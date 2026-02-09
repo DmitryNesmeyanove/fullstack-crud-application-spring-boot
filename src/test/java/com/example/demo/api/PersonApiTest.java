@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 public class PersonApiTest extends BasePage{
     private Person createTestApi(){
+        // Пользователь
         Person person = new Person();
         person.getId();
         person.setUsername("ivanov");
@@ -26,7 +27,7 @@ public class PersonApiTest extends BasePage{
     void testFullCrudCycle(){
         Person person = createTestApi();
         String username = person.getUsername();
-        // создаем пользователя
+        // Создаем пользователя
         Response createResponse = given()
                 .contentType(ContentType.JSON)
                 .body(person)
@@ -86,7 +87,7 @@ public class PersonApiTest extends BasePage{
                 .body("age", equalTo(25))
                 .log().all();
 
-        // 5. Удаляем пользователя из базы
+        // Удаляем пользователя из базы
         given()
                 .when()
                 .delete("/api/person/" + createdId)
@@ -94,7 +95,7 @@ public class PersonApiTest extends BasePage{
                 .statusCode(200)
                 .log().all();
 
-        // 6. Проверяем, что пользователя нет в базе
+        // Проверяем, что пользователя нет в базе
         given()
                 .when()
                 .get("/api/person/search/username?username=" + newUsername)
